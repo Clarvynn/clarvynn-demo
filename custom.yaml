@@ -1,0 +1,31 @@
+clarvynn-config:
+  profiles:
+    server-a-prod:
+      server-name: server-a-prod-custom
+      language: python
+      framework: flask
+      export_interval: 30000
+      buffer_size: 600000
+      log_level: error
+    server-b-prod:
+      server-name: server-b-prod-custom
+      language: python
+      framework: flask
+      export_interval: 30000
+      buffer_size: 600000
+      log_level: error
+    server-c-prod:
+      server-name: server-c-prod-custom
+      language: python
+      framework: flask
+      export_interval: 30000
+      buffer_size: 600000
+      log_level: error
+  exporters:
+    otlp_traces_endpoint: http://localhost:4317
+    otlp_metrics_endpoint: http://localhost:4317
+  exemplar_sampling:
+    probability: 1.0
+  max_exemplars: 1000000  # Maximum number of exemplars to store
+  retry_interval: 5000     # Retry interval in milliseconds (5 seconds)
+  retry_timeout: 3600000   # Retry timeout in milliseconds (1 hour)

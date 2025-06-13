@@ -1,210 +1,135 @@
-# docker-otel-lgtm
+# 🚀 Clarvynn Demo - Flask Microservices with Exemplars
 
-An OpenTelemetry backend in a Docker image.
+This demo showcases **Clarvynn's telemetry control plane** with real Flask applications. Experience how Clarvynn governs HTTP metrics and traces with exemplars - **zero code changes required**.
 
-<!-- markdownlint-disable-next-line MD013 -->
-![Components included in the Docker image: OpenTelemetry collector, Prometheus, Tempo, Loki, Grafana, Pyroscope](img/overview.png) <!-- editorconfig-checker-disable-line -->
+## 🎯 What You'll See
 
-The `grafana/otel-lgtm` Docker image is an open source backend for OpenTelemetry
-that's intended for development, demo, and testing environments.
-If you are looking for a production-ready, out-of-the box solution to monitor applications
-and minimize MTTR (mean time to resolution) with OpenTelemetry and Prometheus,
-you should try [Grafana Cloud Application Observability][app-o11y].
+- **Zero code changes** - Flask apps run normally with Clarvynn governance
+- **Controlled distributed tracing** - See requests flow across 3 microservices
+- **Exemplars in action** - Click rhombus points to jump from metrics to traces
+- **Production-ready telemetry** - Industry-standard Prometheus + Grafana + Tempo
 
-## Documentation
+## 🏗️ Architecture
 
-- Blog post: [_An OpenTelemetry backend in a Docker image: Introducing grafana/otel-lgtm_][otel-lgtm]
-
-## Get the Docker image
-
-The Docker image is available on Docker hub: <https://hub.docker.com/r/grafana/otel-lgtm>
-
-## Run the Docker image
-
-### Linux/Unix
-
-```sh
-./run-lgtm.sh
+```
+┌─────────────────────────────────────────────────────────┐
+│                Flask Applications                       │
+│  ┌─────────────────┐ ┌─────────────────┐ ┌─────────────┐ │
+│  │   Server A      │ │   Server B      │ │   Server C  │ │
+│  │   Port 6000     │ │   Port 5001     │ │   Port 5002 │ │
+│  │   Main API      │ │   Greeting Svc  │ │   Name Svc  │ │
+│  │ + Clarvynn      │ │ + Clarvynn      │ │ + Clarvynn  │ │
+│  └─────────────────┘ └─────────────────┘ └─────────────┘ │
+└─────────────────────────────────────────────────────────┘
+                              │ OTLP Data
+                              ▼
+┌─────────────────────────────────────────────────────────┐
+│                    LGTM Stack (Docker)                  │
+│  ┌─────────────┐ ┌─────────────┐ ┌─────────────────────┐ │
+│  │   Grafana   │ │ Prometheus  │ │  OpenTelemetry      │ │
+│  │   :3000     │ │    :9090    │ │    Collector        │ │
+│  └─────────────┘ └─────────────┘ └─────────────────────┘ │
+│  ┌─────────────┐                                         │
+│  │    Tempo    │                                         │
+│  │    :3200    │                                         │
+│  └─────────────┘                                         │
+└─────────────────────────────────────────────────────────┘
 ```
 
-### Windows (PowerShell)
+## 🚀 Quick Start
 
-```powershell
-./run-lgtm
+### Prerequisites
+- **Docker** (for LGTM observability stack)
+- **Python 3.8+** (for Flask applications)
+- **Clarvynn binary** (download from [releases](https://github.com/clarvynn/clarvynn/releases))
+
+### Step 1: Start LGTM Stack
+```bash
+./start-lgtm-stack.sh
 ```
 
-### Linux/Unix Using mise
-
-You can also use [mise][mise] to run the Docker image:
-
-```sh
-mise run lgtm
+### Step 2: Set Up Python Environment
+```bash
+./setup-python-env.sh
 ```
 
-## Configuration
+### Step 3: Run Flask Services (3 terminals)
 
-### Enable logging
-
-You can enable logging for troubleshooting:
-
-| Environment Variable     | Enables Logging in:     |
-|--------------------------|-------------------------|
-| `ENABLE_LOGS_GRAFANA`    | Grafana                 |
-| `ENABLE_LOGS_LOKI`       | Loki                    |
-| `ENABLE_LOGS_PROMETHEUS` | Prometheus              |
-| `ENABLE_LOGS_TEMPO`      | Tempo                   |
-| `ENABLE_LOGS_PYROSCOPE`  | Pyroscope               |
-| `ENABLE_LOGS_OTELCOL`    | OpenTelemetry Collector |
-| `ENABLE_LOGS_ALL`        | All of the above        |
-
-This has nothing to do with any application logs, which are collected by OpenTelemetry.
-
-### Send data to vendors
-
-In addition to the built-in observability tools, you can also send data to vendors.
-That way, you can easily try and switch between different backends.
-
-If the [`OTEL_EXPORTER_OTLP_ENDPOINT`][otlp-endpoint]
-variable is set, the OpenTelemetry Collector will send data (logs, metrics, and traces)
-to the specified endpoint using "OTLP/HTTP".
-
-In addition, you can provide [`OTEL_EXPORTER_OTLP_HEADERS`][otlp-headers],
-for example, to authenticate with the backend.
-
-#### Send data to Grafana Cloud
-
-You can find the values for the environment variables in your [Grafana Cloud account][otel-setup].
-
-### Persist data across container instantiation
-
-The various components in the repository are configured to write their data to the `/data`
-directory. If you need to persist data across containers being created and destroyed,
-you can mount a volume to the `/data` directory. Note that this image is intended for
-development, demo, and testing environments and persisting data to an external volume
-doesn't change that. However, this feature could be useful in certain cases for
-some users even in testing situations.
-
-## Run lgtm in Kubernetes
-
-```sh
-# Create k8s resources
-kubectl apply -f k8s/lgtm.yaml
-
-# Configure port forwarding
-kubectl port-forward service/lgtm 3000:3000 4317:4317 4318:4318
-
-# Using mise
-mise k8s-apply
-mise k8s-port-forward
+**Terminal 1 - Server A (Main API):**
+```bash
+source clarvynn-demo-env/bin/activate
+clarvynn run gunicorn clarvynn_examples.server_a:app -w 2 --threads 2 -b 127.0.0.1:6000 --config custom.yaml --profile server-a-prod
 ```
 
-## Send OpenTelemetry Data
-
-There's no need to configure anything: the Docker image works with OpenTelemetry's defaults.
-
-```sh
-# Not needed, but these are the defaults in OpenTelemetry
-export OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
-export OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318
+**Terminal 2 - Server B (Greeting Service):**
+```bash
+source clarvynn-demo-env/bin/activate
+clarvynn run uwsgi --ini clarvynn_examples/http_b.ini --workers 1 --threads 1 --config custom.yaml --profile server-b-prod
 ```
 
-## View Grafana
-
-Navigate to <http://127.0.0.1:3000> and log in with the default built-in user `admin` and password `admin`.
-
-## Build the Docker image from scratch
-
-```sh
-cd docker/
-docker build . -t grafana/otel-lgtm
-
-# Using mise
-mise build-lgtm
+**Terminal 3 - Server C (Name Service):**
+```bash
+source clarvynn-demo-env/bin/activate
+clarvynn run python clarvynn_examples/server_c.py --config custom.yaml --profile server-c-prod
 ```
 
-## Build and run the example app
-
-> [!TIP]
-> You can run everything together using [mise][mise] with `mise run all`.
-
-### Run
-
-Run the example REST service:
-
-#### Unix/Linux
-
-```sh
-./run-example.sh
-```
-
-#### Windows (PowerShell)
-
-```powershell
-./run-example
-```
-
-#### Unix/Linux Using mise
-
-```sh
-mise run example
-```
-
-### Generate traffic
-
-#### Unix/Linux
-
-```sh
+### Step 4: Generate Traffic
+```bash
 ./generate-traffic.sh
 ```
 
-#### Windows (PowerShell)
-
-```powershell
-./generate-traffic
+### Step 5: Verify Exemplars
+```bash
+./verify-exemplars.sh
 ```
 
-#### Unix/Linux Using mise
+### Step 6: View Exemplars
+- **Grafana:** http://localhost:3000 (admin/admin) → Dashboards → "🚀 Clarvynn Application Monitoring"
+- **Prometheus:** http://localhost:9090 → Query: `http_server_duration_milliseconds_bucket` → Graph tab → Enable "Show exemplars"
 
-```sh
-mise run generate-traffic
+## 💎 What You'll Experience
+
+### Exemplars in Action
+- **Rhombus-shaped points** on histogram charts in Grafana
+- **Click rhombus points** → Jump directly to distributed traces
+- **Zero code changes** in Flask applications
+
+### Key Metrics (with Exemplars)
+- `http_server_duration_milliseconds_bucket` - Response time histograms
+- `http_server_request_size_bytes_bucket` - Request size distributions
+- `http_server_response_size_bytes_bucket` - Response size distributions
+
+### Distributed Tracing
+- **Server A** calls **Server B** + **Server C**
+- See complete request flow in Tempo
+- Automatic trace correlation via exemplars
+
+## 🎯 Demo Value
+
+### Technical Benefits
+- **Zero code changes** - Flask apps run normally
+- **Governed telemetry** - Clarvynn controls what gets emitted
+- **Distributed tracing** - See requests flow across services
+- **Exemplar correlation** - Direct links from metrics to traces
+
+### Business Benefits
+- **Faster troubleshooting** - From hours to minutes
+- **No development overhead** - Zero code changes needed
+- **Better user experience** - Proactive issue detection
+- **Reduced operational costs** - Efficient problem resolution
+
+## 🛑 Stopping the Demo
+
+```bash
+# Stop Flask applications (Ctrl+C in each terminal)
+./stop-lgtm-stack.sh
 ```
 
-> [!TIP]
-> You can use [OTel Checker][otel-checker] to check if the instrumentation is correct.
+## 📚 Learn More
 
-## Run example apps in different languages
+- **Complete Guide:** [CLARVYNN_DEMO.md](CLARVYNN_DEMO.md)
+- **Clarvynn Website:** https://www.clarvynn.io
 
-The example apps are in the [`examples/`][examples] directory.
-Each example has a `run.sh` or `run.cmd` script to start the app.
+---
 
-Every example implements a rolldice service, which returns a random number between 1 and 6.
-
-Each example uses a different application port
-(to be able to run all applications at the same time).
-
-| Example | Service URL                           |
-|---------|---------------------------------------|
-| Java    | `curl http://127.0.0.1:8080/rolldice` |
-| Go      | `curl http://127.0.0.1:8081/rolldice` |
-| Python  | `curl http://127.0.0.1:8082/rolldice` |
-| .NET    | `curl http://127.0.0.1:8083/rolldice` |
-| Node.js | `curl http://127.0.0.1:8084/rolldice` |
-
-## Related Work
-
-- [Metrics, Logs, Traces and Profiles in Grafana][mltp]
-- [OpenTelemetry Acceptance Tests (OATs)][oats]
-
-<!-- editorconfig-checker-disable -->
-<!-- markdownlint-disable MD013 -->
-
-[app-o11y]: https://grafana.com/products/cloud/application-observability/
-[examples]: https://github.com/grafana/docker-otel-lgtm/tree/main/examples
-[mise]: https://github.com/jdx/mise
-[mltp]: https://github.com/grafana/intro-to-mltp
-[otel-checker]: https://github.com/grafana/otel-checker/
-[otel-lgtm]: https://grafana.com/blog/2024/03/13/an-opentelemetry-backend-in-a-docker-image-introducing-grafana/otel-lgtm/
-[otel-setup]: https://grafana.com/docs/grafana-cloud/send-data/otlp/send-data-otlp/#manual-opentelemetry-setup-for-advanced-users
-[otlp-endpoint]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_endpoint
-[otlp-headers]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers
-[oats]: https://github.com/grafana/oats
+**🚀 Experience governed telemetry with Clarvynn - no code changes required!**
