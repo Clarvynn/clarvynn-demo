@@ -75,6 +75,9 @@ echo "   Starting LGTM stack in Docker..."
 echo "   This may take a moment to download the image..."
 
 # Use docker run with volume mounts for custom configuration
+# Remove any existing container to ensure fresh start
+docker rm -f lgtm 2>/dev/null || true
+
 docker run -d \
     --name lgtm \
     -p 3000:3000 \
@@ -83,8 +86,9 @@ docker run -d \
     -p 4317:4317 \
     -p 4318:4318 \
     -v "$(pwd)/docker/otelcol-config.yaml:/otel-lgtm/otelcol-config.yaml" \
-    -v "$(pwd)/docker/grafana-dashboard-clarvynn-app-monitoring.json:/etc/grafana/provisioning/dashboards/clarvynn-dashboard.json" \
+    -v "$(pwd)/docker/grafana-dashboard-clarvynn-app-monitoring.json:/otel-lgtm/grafana-dashboard-clarvynn-app-monitoring.json" \
     -v "$(pwd)/docker/grafana-dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml" \
+    -v "$(pwd)/docker/grafana-dashboards.yaml:/otel-lgtm/grafana/conf/provisioning/dashboards/grafana-dashboards.yaml" \
     -v "$(pwd)/custom.yaml:/app/custom.yaml" \
     grafana/otel-lgtm:latest
 
