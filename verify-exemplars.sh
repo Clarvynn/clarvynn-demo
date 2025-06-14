@@ -45,8 +45,14 @@ check_exemplars() {
         exemplar_count=$(echo "$response" | jq -r '.data[] | .exemplars[]?' 2>/dev/null | wc -l | tr -d ' ')
         series_count=$(echo "$response" | jq -r '.data | length' 2>/dev/null)
         
-        # Extract first few trace IDs for display
-        mapfile -t trace_ids < <(echo "$response" | jq -r '.data[].exemplars[]?.labels.traceID' 2>/dev/null | head -3)
+        # Extract first few trace IDs for display (compatible approach)
+        trace_ids_raw=$(echo "$response" | jq -r '.data[].exemplars[]?.labels.trace_id' 2>/dev/null | grep -v null | head -3)
+        trace_ids=()
+        if [ -n "$trace_ids_raw" ]; then
+            while IFS= read -r line; do
+                [ -n "$line" ] && trace_ids+=("$line")
+            done <<< "$trace_ids_raw"
+        fi
     fi
     
     if [ "$exemplar_count" -gt 0 ]; then
@@ -82,8 +88,8 @@ echo ""
 # Get all trace IDs from exemplars
 echo "Finding traces that span multiple services..."
 all_trace_ids=$(curl -s "http://localhost:9090/api/v1/query_exemplars?query=http_server_duration_milliseconds_bucket" | \
-    jq -r '.data[].exemplars[]?.labels.traceID' 2>/dev/null | \
-    grep -v null | sort | uniq)
+    jq -r '.data[].exemplars[]?.labels.trace_id' 2>/dev/null | \
+    grep -v null | grep -v '^$' | sort | uniq)
 
 if [ -n "$all_trace_ids" ]; then
     trace_count=$(echo "$all_trace_ids" | wc -l | tr -d ' ')
@@ -94,9 +100,9 @@ if [ -n "$all_trace_ids" ]; then
     # Check a few traces to see if they span multiple services
     echo "$all_trace_ids" | head -3 | while read -r trace_id; do
         if [ -n "$trace_id" ]; then
-            # Query for services in this trace (simplified check)
+            # Query for services in this trace (check seriesLabels)
             services=$(curl -s "http://localhost:9090/api/v1/query_exemplars?query=http_server_duration_milliseconds_bucket" | \
-                jq -r ".data[].exemplars[] | select(.labels.traceID == \"$trace_id\") | .labels.service_name" 2>/dev/null | \
+                jq -r ".data[] | select(.exemplars[]?.labels.trace_id == \"$trace_id\") | .seriesLabels.service_name" 2>/dev/null | \
                 sort | uniq | tr '\n' ', ' | sed 's/,$//')
             
             service_count=$(echo "$services" | tr ',' '\n' | grep -v '^$' | wc -l | tr -d ' ')
