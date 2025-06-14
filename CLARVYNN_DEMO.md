@@ -1,15 +1,15 @@
-# 🚀 Clarvynn Demo - Flask Microservices with Exemplars
+# Clarvynn Demo - Flask Microservices with Exemplars
 
 This demo showcases **Clarvynn's telemetry control plane** with real Flask applications. See how Clarvynn governs HTTP metrics and traces with exemplars - **zero code changes required**.
 
-## 🎯 What You'll Experience
+## Overview
 
 - **Zero code changes** - Flask apps run normally with Clarvynn
 - **Controlled distributed tracing** - See requests flow across 3 microservices  
 - **Exemplars in action** - Click rhombus points to jump from metrics to traces
 - **Production-ready telemetry** - Industry-standard Prometheus + Grafana + Tempo
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -36,7 +36,7 @@ This demo showcases **Clarvynn's telemetry control plane** with real Flask appli
 └─────────────────────────────────────────────────────────┘
 ```
 
-## 🚀 Quick Start Guide
+## Quick Start Guide
 
 ### Prerequisites
 - **Docker** (for LGTM observability stack)
@@ -136,16 +136,16 @@ This generates requests to:
 ```
 
 This script checks:
-- ✅ Prometheus accessibility
-- 📊 Exemplar counts for each HTTP metric
-- 🔗 Distributed tracing correlation
-- 📍 Sample trace IDs
+- Prometheus accessibility
+- Exemplar counts for each HTTP metric
+- Distributed tracing correlation
+- Sample trace IDs
 
 ---
 
 ### Step 7: View Exemplars in Grafana
 1. Open http://localhost:3000 (admin/admin)
-2. Go to **Dashboards** → **"🚀 Clarvynn Application Monitoring"**
+2. Go to **Dashboards** → **"Clarvynn Application Monitoring"**
 3. Look for **rhombus-shaped points** on histogram charts
 4. **Click rhombus points** to jump directly to traces in Tempo
 
@@ -167,7 +167,7 @@ This script checks:
 ./stop-lgtm-stack.sh
 ```
 
-## 💎 Understanding Exemplars
+## Understanding Exemplars
 
 ### What Are Exemplars?
 Exemplars are **sample data points** that connect metrics to traces. When you see a slow request in your metrics, exemplars let you click directly to the exact trace that caused it.
@@ -178,7 +178,7 @@ Grafana **samples exemplars** to keep dashboards clean and performant. This is n
 ### Checking All Exemplars
 Use `./verify-exemplars.sh` to see the total count of exemplars in Prometheus. This gives you confidence that exemplars are working even if Grafana only shows a subset.
 
-## 🎯 Demo Talking Points
+## Demo Talking Points
 
 ### For Technical Teams
 1. **"Zero code changes"** - Show the Flask code has no OpenTelemetry imports
@@ -193,7 +193,7 @@ Use `./verify-exemplars.sh` to see the total count of exemplars in Prometheus. T
 3. **"Better user experience"** - Proactive issue detection
 4. **"Reduced operational costs"** - Efficient problem resolution
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### No Exemplars Visible?
 1. Make sure all 3 Flask services are running
@@ -211,7 +211,7 @@ Use `./verify-exemplars.sh` to see the total count of exemplars in Prometheus. T
 2. Check if ports 3000, 9090, 3200, 4317, 4318 are available
 3. Restart: `./stop-lgtm-stack.sh` then `./start-lgtm-stack.sh`
 
-## 📚 Learn More
+## Learn More
 
 - **Clarvynn Website**: https://www.clarvynn.io
 - **Documentation**: https://docs.clarvynn.io
@@ -219,4 +219,4 @@ Use `./verify-exemplars.sh` to see the total count of exemplars in Prometheus. T
 
 ---
 
-**🚀 Experience governed telemetry with Clarvynn - no code changes required!** 
+**Experience governed telemetry with Clarvynn - no code changes required!** 

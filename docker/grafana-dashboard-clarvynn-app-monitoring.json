@@ -15,7 +15,7 @@
       }
     ]
   },
-  "description": "🚀 Clarvynn Application Monitoring - Real Flask Apps with Exemplars",
+  "description": "Clarvynn Application Monitoring - Real Flask Apps with Exemplars",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 2,
@@ -41,7 +41,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "# 🚀 Clarvynn Application Monitoring Dashboard\n\n**Real Flask Applications with Zero Code Changes** • **Automatic Distributed Tracing** • **Exemplars Connecting Metrics to Traces**\n\n💎 **Look for DIAMOND-SHAPED EXEMPLAR POINTS** on histogram charts below - click them to jump directly to distributed traces in Tempo!\n\n**Services**: server-a-prod-custom (Main API) • server-b-prod-custom (Greeting Service) • server-c-prod-custom (Name Service)",
+        "content": "# Clarvynn Application Monitoring Dashboard\n\n**Real Flask Applications with Zero Code Changes** • **Controlled Distributed Tracing** • **Exemplars Connecting Metrics to Traces**\n\n**Look for RHOMBUS-SHAPED EXEMPLAR POINTS** on histogram charts below - click them to jump directly to distributed traces in Tempo!\n\n**Services**: server-a-prod-custom (Main API) • server-b-prod-custom (Greeting Service) • server-c-prod-custom (Name Service)",
         "mode": "markdown"
       },
       "pluginVersion": "10.3.3",
@@ -145,7 +145,7 @@
           "refId": "A"
         }
       ],
-      "title": "🔥 HTTP Request Rate",
+      "title": "HTTP Request Rate",
       "type": "timeseries"
     },
     {
@@ -247,7 +247,7 @@
           "refId": "A"
         }
       ],
-      "title": "❌ HTTP Error Rate",
+      "title": "HTTP Error Rate",
       "type": "timeseries"
     },
     {
@@ -255,7 +255,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "💎 HTTP response time percentiles WITH EXEMPLARS. Click diamond points to see traces!",
+      "description": "HTTP response time percentiles WITH EXEMPLARS. Click rhombus points to see traces!",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -373,7 +373,7 @@
           "refId": "C"
         }
       ],
-      "title": "💎 Response Time Percentiles (WITH EXEMPLARS)",
+      "title": "Response Time Percentiles (WITH EXEMPLARS)",
       "type": "timeseries"
     },
     {
@@ -381,7 +381,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "💎 HTTP request size distribution WITH EXEMPLARS. Click diamond points to see traces!",
+      "description": "HTTP request size distribution WITH EXEMPLARS. Click rhombus points to see traces!",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -475,7 +475,7 @@
           "refId": "A"
         }
       ],
-      "title": "💎 Request Size P95 (WITH EXEMPLARS)",
+      "title": "Request Size P95 (WITH EXEMPLARS)",
       "type": "timeseries"
     },
     {
@@ -483,7 +483,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "💎 HTTP response size distribution WITH EXEMPLARS. Click diamond points to see traces!",
+      "description": "HTTP response size distribution WITH EXEMPLARS. Click rhombus points to see traces!",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -577,7 +577,7 @@
           "refId": "A"
         }
       ],
-      "title": "💎 Response Size P95 (WITH EXEMPLARS)",
+      "title": "Response Size P95 (WITH EXEMPLARS)",
       "type": "timeseries"
     },
     {
@@ -670,7 +670,7 @@
           "refId": "A"
         }
       ],
-      "title": "🎯 Traffic by Endpoint",
+      "title": "Traffic by Endpoint",
       "type": "timeseries"
     }
   ],
@@ -686,7 +686,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "🚀 Clarvynn Application Monitoring",
+  "title": "Clarvynn Application Monitoring",
   "uid": "clarvynn-app-monitoring",
   "version": 1,
   "weekStart": ""

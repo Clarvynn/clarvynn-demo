@@ -1,30 +1,30 @@
-# 🚀 Clarvynn Demo - Flask Microservices with Exemplars
+# Clarvynn Demo - Flask Microservices with Exemplars
 
 This demo showcases **Clarvynn's telemetry control plane** with real Flask applications. Experience how Clarvynn governs HTTP metrics and traces with exemplars - **zero code changes required**.
 
-## 🎯 What You'll See
+## Overview
 
 - **Zero code changes** - Flask apps run normally with Clarvynn governance
 - **Controlled distributed tracing** - See requests flow across 3 microservices
 - **Exemplars in action** - Click rhombus points to jump from metrics to traces
 - **Production-ready telemetry** - Industry-standard Prometheus + Grafana + Tempo
 
-## 🏗️ Architecture
+## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                Flask Applications                       │
+┌──────────────────────────────────────────────────────────┐
+│                Flask Applications                        │
 │  ┌─────────────────┐ ┌─────────────────┐ ┌─────────────┐ │
 │  │   Server A      │ │   Server B      │ │   Server C  │ │
 │  │   Port 6000     │ │   Port 5001     │ │   Port 5002 │ │
 │  │   Main API      │ │   Greeting Svc  │ │   Name Svc  │ │
 │  │ + Clarvynn      │ │ + Clarvynn      │ │ + Clarvynn  │ │
 │  └─────────────────┘ └─────────────────┘ └─────────────┘ │
-└─────────────────────────────────────────────────────────┘
+└──────────────────────────────────────────────────────────┘
                               │ OTLP Data
                               ▼
-┌─────────────────────────────────────────────────────────┐
-│                    LGTM Stack (Docker)                  │
+┌──────────────────────────────────────────────────────────┐
+│                    LGTM Stack (Docker)                   │
 │  ┌─────────────┐ ┌─────────────┐ ┌─────────────────────┐ │
 │  │   Grafana   │ │ Prometheus  │ │  OpenTelemetry      │ │
 │  │   :3000     │ │    :9090    │ │    Collector        │ │
@@ -33,10 +33,10 @@ This demo showcases **Clarvynn's telemetry control plane** with real Flask appli
 │  │    Tempo    │                                         │
 │  │    :3200    │                                         │
 │  └─────────────┘                                         │
-└─────────────────────────────────────────────────────────┘
+└──────────────────────────────────────────────────────────┘
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - **Docker** (for LGTM observability stack)
@@ -84,10 +84,10 @@ clarvynn run python clarvynn_examples/server_c.py --config custom.yaml --profile
 ```
 
 ### Step 6: View Exemplars
-- **Grafana:** http://localhost:3000 (admin/admin) → Dashboards → "🚀 Clarvynn Application Monitoring"
+- **Grafana:** http://localhost:3000 (admin/admin) → Dashboards → "Clarvynn Application Monitoring"
 - **Prometheus:** http://localhost:9090 → Query: `http_server_duration_milliseconds_bucket` → Graph tab → Enable "Show exemplars"
 
-## 💎 What You'll Experience
+## Key Features
 
 ### Exemplars in Action
 - **Rhombus-shaped points** on histogram charts in Grafana
@@ -104,7 +104,7 @@ clarvynn run python clarvynn_examples/server_c.py --config custom.yaml --profile
 - See complete request flow in Tempo
 - Automatic trace correlation via exemplars
 
-## 🎯 Demo Value
+## Demo Value
 
 ### Technical Benefits
 - **Zero code changes** - Flask apps run normally
@@ -118,18 +118,18 @@ clarvynn run python clarvynn_examples/server_c.py --config custom.yaml --profile
 - **Better user experience** - Proactive issue detection
 - **Reduced operational costs** - Efficient problem resolution
 
-## 🛑 Stopping the Demo
+## Stopping the Demo
 
 ```bash
 # Stop Flask applications (Ctrl+C in each terminal)
 ./stop-lgtm-stack.sh
 ```
 
-## 📚 Learn More
+## Documentation
 
 - **Complete Guide:** [CLARVYNN_DEMO.md](CLARVYNN_DEMO.md)
 - **Clarvynn Website:** https://www.clarvynn.io
 
 ---
 
-**🚀 Experience governed telemetry with Clarvynn - no code changes required!**
+**Experience governed telemetry with Clarvynn - no code changes required!**

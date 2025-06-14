@@ -1,20 +1,22 @@
 #!/bin/bash
 
-echo "🛑 Stopping Clarvynn Demo LGTM Stack..."
+echo "Stopping Clarvynn Demo LGTM Stack..."
 
-# Stop the LGTM container
-if docker ps --format "table {{.Names}}" | grep -q "^lgtm$"; then
-    echo "   Stopping LGTM stack..."
+# Stop and remove the LGTM container
+if docker ps -q -f name=lgtm | grep -q .; then
     docker stop lgtm
-    echo "   ✅ LGTM stack stopped"
+    docker rm lgtm
+    echo "   LGTM stack stopped"
 else
-    echo "   ℹ️  LGTM stack is not running"
+    echo "   LGTM stack was not running"
 fi
 
-# Clean up any leftover containers
+# Clean up any orphaned containers
 docker container prune -f > /dev/null 2>&1
 
+# Clean up any dangling images (optional)
+# docker image prune -f > /dev/null 2>&1
+
+echo "Demo cleanup completed!"
 echo ""
-echo "✅ Demo cleanup completed!"
-echo ""
-echo "🚀 To restart the demo, run: ./start-lgtm-stack.sh" 
+echo "To restart the demo, run: ./start-lgtm-stack.sh" 
