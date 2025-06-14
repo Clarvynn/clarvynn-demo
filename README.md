@@ -1,11 +1,11 @@
 # Clarvynn Demo - Flask Microservices with Exemplars
 
-This demo showcases **Clarvynn's telemetry control plane** with real Flask applications. Experience how Clarvynn governs HTTP metrics and traces with exemplars - **zero code changes required**.
+This demo showcases **Clarvynn's zero-code observability** with real Flask applications. Experience how Clarvynn instruments HTTP metrics and traces with exemplars - **zero code changes required**.
 
 ## Overview
 
-- **Zero code changes** - Flask apps run normally with Clarvynn governance
-- **Controlled distributed tracing** - See requests flow across 3 microservices
+- **Zero code changes** - Flask apps run normally with Clarvynn instrumentation
+- **Distributed tracing** - See requests flow across 3 microservices
 - **Exemplars in action** - Click rhombus points to jump from metrics to traces
 - **Production-ready telemetry** - Industry-standard Prometheus + Grafana + Tempo
 
@@ -41,19 +41,25 @@ This demo showcases **Clarvynn's telemetry control plane** with real Flask appli
 ### Prerequisites
 - **Docker** (for LGTM observability stack)
 - **Python 3.8+** (for Flask applications)
-- **Clarvynn binary** (download from [releases](https://github.com/clarvynn/clarvynn/releases))
+- **Clarvynn binary** (currently supports ARM Macs only)
 
 ### Step 1: Start LGTM Stack
 ```bash
 ./start-lgtm-stack.sh
 ```
 
-### Step 2: Set Up Python Environment
+### Step 2: Install Clarvynn (ARM Mac only)
+```bash
+brew tap clarvynn/tap
+brew install clarvynn
+```
+
+### Step 3: Set Up Python Environment
 ```bash
 ./setup-python-env.sh
 ```
 
-### Step 3: Run Flask Services (3 terminals)
+### Step 4: Run Flask Services (3 terminals)
 
 **Terminal 1 - Server A (Main API):**
 ```bash
@@ -73,17 +79,17 @@ source clarvynn-demo-env/bin/activate
 clarvynn run python clarvynn_examples/server_c.py --config custom.yaml --profile server-c-prod
 ```
 
-### Step 4: Generate Traffic
+### Step 5: Generate Traffic
 ```bash
 ./generate-traffic.sh
 ```
 
-### Step 5: Verify Exemplars
+### Step 6: Verify Exemplars
 ```bash
 ./verify-exemplars.sh
 ```
 
-### Step 6: View Exemplars
+### Step 7: View Exemplars
 - **Grafana:** http://localhost:3000 (admin/admin) → Dashboards → "Clarvynn Application Monitoring"
 - **Prometheus:** http://localhost:9090 → Query: `http_server_duration_milliseconds_bucket` → Graph tab → Enable "Show exemplars"
 
@@ -108,7 +114,7 @@ clarvynn run python clarvynn_examples/server_c.py --config custom.yaml --profile
 
 ### Technical Benefits
 - **Zero code changes** - Flask apps run normally
-- **Governed telemetry** - Clarvynn controls what gets emitted
+- **Seamless instrumentation** - Clarvynn handles telemetry generation
 - **Distributed tracing** - See requests flow across services
 - **Exemplar correlation** - Direct links from metrics to traces
 
@@ -132,4 +138,4 @@ clarvynn run python clarvynn_examples/server_c.py --config custom.yaml --profile
 
 ---
 
-**Experience governed telemetry with Clarvynn - no code changes required!**
+**Experience zero-code observability with Clarvynn - no code changes required!**

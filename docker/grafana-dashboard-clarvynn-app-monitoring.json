@@ -41,7 +41,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "# Clarvynn Application Monitoring Dashboard\n\n**Real Flask Applications with Zero Code Changes** • **Controlled Distributed Tracing** • **Exemplars Connecting Metrics to Traces**\n\n**Look for RHOMBUS-SHAPED EXEMPLAR POINTS** on histogram charts below - click them to jump directly to distributed traces in Tempo!\n\n**Services**: server-a-prod-custom (Main API) • server-b-prod-custom (Greeting Service) • server-c-prod-custom (Name Service)",
+        "content": "# Clarvynn Application Monitoring Dashboard\n\n**Real Flask Applications with Zero Code Changes** • **Distributed Tracing** • **Exemplars Connecting Metrics to Traces**\n\n**Look for RHOMBUS-SHAPED EXEMPLAR POINTS** on histogram charts below - click them to jump directly to distributed traces in Tempo!\n\n**Services**: server-a-prod-custom (Main API) • server-b-prod-custom (Greeting Service) • server-c-prod-custom (Name Service)",
         "mode": "markdown"
       },
       "pluginVersion": "10.3.3",

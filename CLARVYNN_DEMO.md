@@ -1,11 +1,11 @@
 # Clarvynn Demo - Flask Microservices with Exemplars
 
-This demo showcases **Clarvynn's telemetry control plane** with real Flask applications. See how Clarvynn governs HTTP metrics and traces with exemplars - **zero code changes required**.
+This demo showcases **Clarvynn's zero-code observability** with real Flask applications. See how Clarvynn instruments HTTP metrics and traces with exemplars - **zero code changes required**.
 
 ## Overview
 
 - **Zero code changes** - Flask apps run normally with Clarvynn
-- **Controlled distributed tracing** - See requests flow across 3 microservices  
+- **Distributed tracing** - See requests flow across 3 microservices  
 - **Exemplars in action** - Click rhombus points to jump from metrics to traces
 - **Production-ready telemetry** - Industry-standard Prometheus + Grafana + Tempo
 
@@ -41,7 +41,7 @@ This demo showcases **Clarvynn's telemetry control plane** with real Flask appli
 ### Prerequisites
 - **Docker** (for LGTM observability stack)
 - **Python 3.8+** (for Flask applications)
-- **Clarvynn binary** (download from [releases](https://github.com/clarvynn/clarvynn/releases))
+- **ARM Mac** (Clarvynn binary currently supports ARM Macs only)
 
 ---
 
@@ -69,7 +69,7 @@ This creates a virtual environment and installs Flask dependencies.
 
 ### Step 3: Install Clarvynn Binary
 
-**For macOS (recommended):**
+**For ARM Mac:**
 ```bash
 # Install via Homebrew
 brew tap clarvynn/tap
@@ -79,16 +79,7 @@ brew install clarvynn
 clarvynn --version
 ```
 
-**For Linux:**
-```bash
-# Download binary directly
-curl -L https://github.com/clarvynn/clarvynn/releases/latest/download/clarvynn-linux-amd64 -o clarvynn
-chmod +x clarvynn
-sudo mv clarvynn /usr/local/bin/
-
-# Verify installation
-clarvynn --version
-```
+**Note:** Clarvynn currently supports ARM Macs only. Support for other platforms is coming soon.
 
 ---
 
@@ -182,7 +173,7 @@ Use `./verify-exemplars.sh` to see the total count of exemplars in Prometheus. T
 
 ### For Technical Teams
 1. **"Zero code changes"** - Show the Flask code has no OpenTelemetry imports
-2. **"Controlled distributed tracing"** - One request flows through multiple services
+2. **"Distributed tracing"** - One request flows through multiple services
 3. **"Exemplars eliminate guesswork"** - Click rhombus → see exact trace
 4. **"Production-ready metrics"** - Standard Prometheus format
 5. **"Real-time observability"** - See metrics appear as you make requests
@@ -219,4 +210,4 @@ Use `./verify-exemplars.sh` to see the total count of exemplars in Prometheus. T
 
 ---
 
-**Experience governed telemetry with Clarvynn - no code changes required!** 
+**Experience zero-code observability with Clarvynn - no code changes required!** 
