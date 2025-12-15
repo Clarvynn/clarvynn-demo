@@ -1,10 +1,11 @@
+# pin all versions to avoid GitHub rate limit
 [tools]
-go = "1.24.4"
-"go:github.com/grafana/oats" = "0.3.2"
-java = "temurin-21.0.7+6.0.LTS"
-lychee = "0.18.1"
-markdownlint-cli2 = "0.18.1"
-rust = "stable"
+go = "1.25.5"
+"go:github.com/grafana/oats" = "0.6.0"
+java = "temurin-25.0.1+8.0.LTS"
+lychee = "0.20.1"
+markdownlint-cli2 = "0.20.0"
+rust = "1.91.1"
 
 [tasks.lint]
 run = "scripts/super-linter.sh"
@@ -22,15 +23,32 @@ depends = ["lint", "lint-links"]
 description = "All lints not covered by super linter"
 depends = ["lint-links"]
 
-[tasks.test]
-description = "Run integration tests"
-run = './scripts/run-acceptance-tests.sh {{arg(name="tag", default="latest")}}'
-
 [tasks.lgtm]
 run = './run-lgtm.sh {{arg(name="tag", default="latest")}}'
 
+[tasks.local-lgtm]
+description = "Run locally built LGTM image"
+run = './run-lgtm.sh latest true'
+
 [tasks.example]
+alias = "example-java"
 run = "./run-example.sh"
+
+[tasks.example-nodejs]
+dir = "examples/nodejs"
+run = "./run.sh"
+
+[tasks.example-python]
+dir = "examples/python"
+run = "./run.sh"
+
+[tasks.example-go]
+dir = "examples/go"
+run = "./run.sh"
+
+[tasks.example-dotnet]
+dir = "examples/dotnet"
+run = "./run.sh"
 
 [tasks.generate-traffic]
 run = "./generate-traffic.sh"
@@ -42,7 +60,7 @@ depends = ["lgtm", "example", "generate-traffic"]
 run = "kubectl apply -f k8s/lgtm.yaml"
 
 [tasks.k8s-port-forward]
-run = "kubectl port-forward service/lgtm 3000:3000 4317:4317 4318:4318"
+run = "kubectl port-forward service/lgtm 3000:3000 4040:4040 4317:4317 4318:4318 9090:9090"
 
 [tasks.build-lgtm]
 run = './build-lgtm.sh {{arg(name="tag", default="latest")}}'

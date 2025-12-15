@@ -10,4 +10,7 @@ changelog:
         - "*"
       exclude:
         authors:
-          - grafanarenovatebot
+          - dependabot[bot]
+          - grafanarenovatebot[bot]
+          - renovate-sh-app[bot]
+          - renovatebot[bot]

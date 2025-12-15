@@ -1,18 +1,18 @@
 # renovate: datasource=github-releases depName=grafana packageName=grafana/grafana
-ARG GRAFANA_VERSION=v12.0.1
+ARG GRAFANA_VERSION=v12.3.0
 # renovate: datasource=github-releases depName=prometheus packageName=prometheus/prometheus
-ARG PROMETHEUS_VERSION=v3.4.1
+ARG PROMETHEUS_VERSION=v3.8.0
 # renovate: datasource=github-releases depName=tempo packageName=grafana/tempo
-ARG TEMPO_VERSION=v2.8.0
+ARG TEMPO_VERSION=v2.9.0
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki
-ARG LOKI_VERSION=v3.5.1
+ARG LOKI_VERSION=v3.6.2
 # renovate: datasource=github-releases depName=pyroscope packageName=grafana/pyroscope
-ARG PYROSCOPE_VERSION=v1.13.4
+ARG PYROSCOPE_VERSION=v1.16.0
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
-ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.127.0
+ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.139.0
 
 # hadolint global ignore=DL3059
-FROM redhat/ubi9:9.6-1749542372 AS builder
+FROM docker.io/redhat/ubi9:9.6-1760340943@sha256:dec374e05cc13ebbc0975c9f521f3db6942d27f8ccdf06b180160490eef8bdbc AS builder
 
 RUN mkdir /otel-lgtm
 
@@ -57,13 +57,13 @@ COPY download-grafana.sh \
  ./
 
 # TARGETARCH is automatically detected and set by the Docker daemon during the build process. If the build starts
-# on an amd64 architecture, than the TARGETARCH will be set to `amd64`.
+# on an amd64 architecture, then the TARGETARCH will be set to `amd64`.
 # More details on the variables can be found here: https://docs.docker.com/desktop/extensions-sdk/extensions/multi-arch/
 ARG TARGETARCH
 ENV TARGETARCH=${TARGETARCH}
 
 # renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
-ARG COSIGN_VERSION=v2.5.0
+ARG COSIGN_VERSION=v3.0.2
 
 RUN ./install-cosign.sh $COSIGN_VERSION
 
@@ -84,7 +84,7 @@ RUN ./download-otelcol.sh $OPENTELEMETRY_COLLECTOR_VERSION
 COPY grafana-datasources.yaml /otel-lgtm/grafana/conf/provisioning/datasources/
 COPY grafana-dashboards.yaml /otel-lgtm/grafana/conf/provisioning/dashboards/
 
-FROM redhat/ubi9-micro:9.6-1749632992
+FROM docker.io/redhat/ubi9-micro:9.6-1760515026@sha256:aff810919642215e15c993b9bbc110dbcc446608730ad24499dafd9df7a8f8f4
 
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm
@@ -108,5 +108,26 @@ ENV TEMPO_VERSION=${TEMPO_VERSION}
 ENV LOKI_VERSION=${LOKI_VERSION}
 ENV PYROSCOPE_VERSION=${PYROSCOPE_VERSION}
 ENV OPENTELEMETRY_COLLECTOR_VERSION=${OPENTELEMETRY_COLLECTOR_VERSION}
+
+# Re-label the final image, overriding any existing labels from the base image
+LABEL description="An open source backend for OpenTelemetry that's intended for development, demo, and testing environments."
+LABEL io.k8s.description="An open source backend for OpenTelemetry that's intended for development, demo, and testing environments."
+LABEL io.k8s.display-name="Grafana LGTM"
+LABEL maintainer="Grafana Labs"
+LABEL name="grafana/otel-lgtm"
+LABEL org.opencontainers.image.authors="Grafana Labs"
+LABEL org.opencontainers.image.documentation="https://github.com/grafana/docker-otel-lgtm/blob/main/README.md"
+LABEL org.opencontainers.image.vendor="Grafana Labs"
+LABEL org.opencontainers.image.title="Grafana OpenTelemetry LGTM"
+LABEL org.opencontainers.image.source="https://github.com/grafana/docker-otel-lgtm"
+LABEL summary="An OpenTelemetry backend in a Docker image"
+LABEL url="https://github.com/grafana/docker-otel-lgtm"
+LABEL vendor="Grafana Labs"
+
+# Blank out labels inherited from the base image that we don't want
+LABEL build-date=""
+LABEL cpe=""
+LABEL io.buildah.version=""
+LABEL release=""
 
 CMD ["/otel-lgtm/run-all.sh"]

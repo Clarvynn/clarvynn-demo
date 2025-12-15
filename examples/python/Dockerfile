@@ -13,7 +13,7 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # renovate: datasource=pypi depName=opentelemetry-distro
-ENV OPENTELEMETRY_DISTRO_VERSION=0.55b1
+ENV OPENTELEMETRY_DISTRO_VERSION=0.60b0
 RUN pip install --no-cache-dir "opentelemetry-distro[otlp]==$OPENTELEMETRY_DISTRO_VERSION"
 RUN opentelemetry-bootstrap -a install
 
@@ -26,6 +26,3 @@ ENV OTEL_LOGS_EXPORTER=otlp
 EXPOSE 8082
 
 CMD ["opentelemetry-instrument", "flask", "run", "--host", "0.0.0.0", "--port", "8082"]
-
-
-

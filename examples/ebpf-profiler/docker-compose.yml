@@ -8,8 +8,10 @@ services:
       - otel-net
     ports:
       - "3000:3000"
+      - "4040:4040"
       - "4317:4317"
       - "4318:4318"
+      - "9090:9090"
 
   generate-traffic:
     build:
@@ -49,7 +51,6 @@ services:
     environment:
       OTEL_SERVICE_NAME: "rolldice"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
-      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
     ports:
       - "8083:8083"
     networks:
@@ -79,7 +80,6 @@ services:
     environment:
       OTEL_SERVICE_NAME: "rolldice"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
-      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
       GRAFANA_ROLL_WAIT: "2000" # 2 seconds
     ports:
       - "8080:8080"

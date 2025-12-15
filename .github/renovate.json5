@@ -1,10 +1,10 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: ["config:recommended"],
+  extends: ["config:recommended", "customManagers:dockerfileVersions", "customManagers:githubActionsVersions"],
   branchPrefix: "grafanarenovatebot/",
+  dependencyDashboard: true,
   platformCommit: "enabled",
   automerge: true,
-  dependencyDashboard: false,
   ignorePaths: [],
   ignoreUnstable: true,
   packageRules: [
@@ -22,6 +22,11 @@
       schedule: ["before 4am on monday"],
     },
     {
+      matchPackageNames: ["jdx/mise"],
+      groupName: "mise",
+      schedule: ["before 4am on monday"],
+    },
+    {
       matchDatasources: ["pypi"],
       matchDepNames: ["opentelemetry-distro"],
       ignoreUnstable: false,
@@ -29,6 +34,16 @@
     {
       matchPackageNames: ["grafana/grafana", "prometheus/prometheus", "grafana/loki", "grafana/tempo", "open-telemetry/opentelemetry-collector-releases"],
       labels: ["docker-dependency"],
+    },
+    {
+      matchPackageNames: ["grafana/shared-workflows"],
+      versioning: "regex:^(?<compatibility>[a-z-]+)-v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)?$",
+    },
+    {
+      extends: ["monorepo:dotnet"],
+      description: ["Disable major version updates for .NET"],
+      matchUpdateTypes: ["major"],
+      enabled: false,
     },
   ],
   vulnerabilityAlerts: {
@@ -46,15 +61,18 @@
     },
     {
       customType: "regex",
-      description: "Update _VERSION variables in Dockerfiles",
-      managerFilePatterns: ["/Dockerfile/"],
-      matchStrings: ["# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)\\s"],
-    },
-    {
-      customType: "regex",
       description: "Update _version variables in run.sh",
       managerFilePatterns: ["/run.sh$/"],
       matchStrings: ["# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s"],
+    },
+    {
+      customType: "regex",
+      description: "update mise",
+      managerFilePatterns: ["/(^|/)(workflow-templates|\\.(?:github|gitea|forgejo)/(?:workflows|actions))/.+\\.ya?ml$/", "/(^|/)action\\.ya?ml$/"],
+      datasourceTemplate: "github-release-attachments",
+      packageNameTemplate: "jdx/mise",
+      depNameTemplate: "mise",
+      matchStrings: ["jdx/mise-action.*\\n\\s*with:\\s*\\n\\s*version: [\"']?(?<currentValue>v[.\\d]+)[\"']?\\s*\\n\\s*sha256: [\"']?(?<currentDigest>\\w+)[\"']?"],
     },
   ],
 }
