@@ -1,0 +1,28 @@
+version: "1.0"
+
+service:
+  name: payment-service
+  namespace: production
+  version: "1.0.0"
+
+sampling:
+  # Base rate: Only 1% of routine traffic
+  base_rate: 0.01
+
+  # Conditions: These override base_rate (100% sampling when matched)
+  conditions:
+    # Always capture all server errors (5xx)
+    - name: server_errors
+      when: "status_code >= 500"
+
+    # Always capture client errors (4xx)
+    - name: client_errors
+      when: "status_code >= 400 AND status_code < 500"
+
+    # Always capture slow requests (>1 second)
+    - name: slow_requests
+      when: "duration_ms > 1000"
+
+    # Always capture payment endpoints (critical business path)
+    - name: critical_payment_apis
+      when: "path contains '/payment'"

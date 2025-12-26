@@ -42,29 +42,21 @@ fi
 
 # Check if container is already running
 if docker ps --format "table {{.Names}}" | grep -q "lgtm"; then
-    echo "   LGTM stack already running!"
+    echo "✅ LGTM stack already running"
     echo ""
     echo "Available Services:"
-    echo "   Grafana:     http://localhost:3000 (admin/admin)"
-    echo "   Prometheus:  http://localhost:9090"
-    echo "   Tempo:       http://localhost:3200"
-    echo "   OTEL Collector: localhost:4317 (gRPC), localhost:4318 (HTTP)"
+    echo "  Grafana:     http://localhost:3000 (admin/admin)"
+    echo "  Prometheus:  http://localhost:9100"
+    echo "  Tempo:       http://localhost:3200"
+    echo "  OTEL Collector: localhost:4317 (gRPC), localhost:4318 (HTTP)"
     echo ""
-    echo "Next Steps:"
-    echo "   1. Set up Flask environment: ./setup-python-env.sh"
-    echo "   2. Install Clarvynn binary (download from releases)"
-    echo "   3. Run Flask services with Clarvynn instrumentation"
-    echo "   4. Generate traffic: ./generate-traffic.sh"
-    echo ""
-    echo "See CLARVYNN_DEMO.md for complete instructions"
-    echo ""
-    echo "The observability stack is now ready for your Clarvynn Flask applications!"
+    echo "Dashboard: 'Clarvynn Cost Savings Demo'"
     exit 0
 fi
 
 # Create custom dashboard directory if it doesn't exist
 mkdir -p docker/dashboards
-
+    
 # Copy our custom dashboard to the dashboards directory
 if [ -f "docker/grafana-dashboard-clarvynn-app-monitoring.json" ]; then
     cp docker/grafana-dashboard-clarvynn-app-monitoring.json docker/dashboards/
@@ -79,12 +71,12 @@ echo "   This may take a moment to download the image..."
 docker rm -f lgtm 2>/dev/null || true
 
 docker run -d \
-    --name lgtm \
-    -p 3000:3000 \
-    -p 9090:9090 \
+        --name lgtm \
+        -p 3000:3000 \
+    -p 9100:9090 \
     -p 3200:3200 \
-    -p 4317:4317 \
-    -p 4318:4318 \
+        -p 4317:4317 \
+        -p 4318:4318 \
     -v "$(pwd)/docker/otelcol-config.yaml:/otel-lgtm/otelcol-config.yaml" \
     -v "$(pwd)/docker/grafana-dashboard-clarvynn-app-monitoring.json:/otel-lgtm/grafana-dashboard-clarvynn-app-monitoring.json" \
     -v "$(pwd)/docker/grafana-dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml" \
@@ -93,34 +85,21 @@ docker run -d \
     grafana/otel-lgtm:latest
 
 echo "   Waiting for services to start..."
-
-# Wait for services to be ready
+    
+    # Wait for services to be ready
 wait_for_service "Grafana" "http://localhost:3000/api/health" 120
 wait_for_service "OpenTelemetry Collector" "http://localhost:4318" 60
 
 echo ""
-echo "LGTM Stack is ready!"
+echo "✅ LGTM Stack Ready!"
 echo ""
 echo "Available Services:"
-echo "   Grafana:     http://localhost:3000 (admin/admin)"
-echo "   Prometheus:  http://localhost:9090"
-echo "   Tempo:       http://localhost:3200"
-echo "   OTEL Collector: localhost:4317 (gRPC), localhost:4318 (HTTP)"
+echo "  Grafana:     http://localhost:3000 (admin/admin)"
+echo "  Prometheus:  http://localhost:9100"
+echo "  Tempo:       http://localhost:3200"
+echo "  OTEL Collector: localhost:4317 (gRPC), localhost:4318 (HTTP)"
 echo ""
-echo "Next Steps:"
-echo "   1. Set up Flask environment: ./setup-python-env.sh"
-echo "   2. Install Clarvynn binary (download from releases)"
-echo "   3. Run Flask services with Clarvynn instrumentation"
-echo "   4. Generate traffic: ./generate-traffic.sh"
+echo "Dashboard: 'Clarvynn Cost Savings Demo' (auto-loaded)"
 echo ""
-echo "See CLARVYNN_DEMO.md for complete instructions"
-echo ""
-
-# Add a note about the custom dashboard
-if [ -f "docker/grafana-dashboard-clarvynn-app-monitoring.json" ]; then
-    echo "Custom Clarvynn dashboard has been loaded into Grafana."
-    echo "Look for 'Clarvynn Application Monitoring' in the Dashboards section."
-    echo ""
-fi
-
-echo "The observability stack is now ready for your Clarvynn Flask applications!" 
+echo "Next: Run ./scripts/run-app.sh to start the demo"
+ 

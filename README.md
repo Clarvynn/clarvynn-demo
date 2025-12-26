@@ -1,141 +1,183 @@
-# Clarvynn Demo - Flask Microservices with Exemplars
+# Clarvynn Cost Savings Demo
 
-This demo showcases **Clarvynn's zero-code observability** with real Flask applications. Experience how Clarvynn instruments HTTP metrics and traces with exemplars - **zero code changes required**.
+**See 66-70% observability cost reduction in < 5 minutes.**
 
-## Overview
+---
 
-- **Zero code changes** - Flask apps run normally with Clarvynn instrumentation
-- **Distributed tracing** - See requests flow across 3 microservices
-- **Exemplars in action** - Click rhombus points to jump from metrics to traces
-- **Production-ready telemetry** - Industry-standard Prometheus + Grafana + Tempo
+## Expected Results
 
-## Architecture
+| Metric | Without Clarvynn | With Clarvynn | Savings |
+|--------|------------------|---------------|---------|
+| **Traces Exported** | ~5,000 | ~1,500 | 70% ↓ |
+| **Logs Exported** | ~16,000 | ~5,400 | 66% ↓ |
+| **Error Count** | 989 | 989 | 0% loss |
+| **Monthly Cost** | ~$28 | ~$10 | 66% ↓ |
 
-```
-┌──────────────────────────────────────────────────────────┐
-│                Flask Applications                        │
-│  ┌─────────────────┐ ┌─────────────────┐ ┌─────────────┐ │
-│  │   Server A      │ │   Server B      │ │   Server C  │ │
-│  │   Port 6000     │ │   Port 5001     │ │   Port 5002 │ │
-│  │   Main API      │ │   Greeting Svc  │ │   Name Svc  │ │
-│  │ + Clarvynn      │ │ + Clarvynn      │ │ + Clarvynn  │ │
-│  └─────────────────┘ └─────────────────┘ └─────────────┘ │
-└──────────────────────────────────────────────────────────┘
-                              │ OTLP Data
-                              ▼
-┌──────────────────────────────────────────────────────────┐
-│                    LGTM Stack (Docker)                   │
-│  ┌─────────────┐ ┌─────────────┐ ┌─────────────────────┐ │
-│  │   Grafana   │ │ Prometheus  │ │  OpenTelemetry      │ │
-│  │   :3000     │ │    :9090    │ │    Collector        │ │
-│  └─────────────┘ └─────────────┘ └─────────────────────┘ │
-│  ┌─────────────┐                                         │
-│  │    Tempo    │                                         │
-│  │    :3200    │                                         │
-│  └─────────────┘                                         │
-└──────────────────────────────────────────────────────────┘
-```
+> **Note:** This demo uses 30% error rate (conservative). Real production with <5% errors sees **90%+ savings**.
+
+---
 
 ## Quick Start
 
 ### Prerequisites
-- **Docker** (for LGTM observability stack)
-- **Python 3.8+** (for Flask applications)
-- **Clarvynn binary** (currently supports ARM Macs only)
 
-### Step 1: Start LGTM Stack
+```bash
+# Install dependencies
+pip install flask requests gunicorn
+pip install opentelemetry-distro opentelemetry-exporter-otlp
+pip install opentelemetry-instrumentation-logging
+opentelemetry-bootstrap -a install
+```
+
+### Step 1: Start Infrastructure
+
 ```bash
 ./start-lgtm-stack.sh
 ```
 
-### Step 2: Install Clarvynn (ARM Mac only)
+- Grafana: http://localhost:3000 (admin/admin)
+- Dashboard auto-loads: "Clarvynn Cost Savings Demo"
+
+### Step 2: Baseline WITHOUT Clarvynn
+
 ```bash
-brew tap clarvynn/tap
-brew install clarvynn
+# Terminal 1: Run app
+./scripts/run-app.sh
+
+# Terminal 2: Generate 5000 requests (deterministic, ~4 min)
+./scripts/generate-traffic.sh
 ```
 
-### Step 3: Set Up Python Environment
-```bash
-./setup-python-env.sh
-```
+**Check Dashboard:**
+- Monthly Cost: **~$28**
+- Traces: **~5,000** (100%)
+- Logs: **~16,000**
+- Errors: **989**
 
-### Step 4: Run Flask Services (3 terminals)
+**Screenshot this** 
 
-**Terminal 1 - Server A (Main API):**
-```bash
-source clarvynn-demo-env/bin/activate
-clarvynn run gunicorn clarvynn_examples.server_a:app -w 2 --threads 2 -b 127.0.0.1:6000 --config custom.yaml --profile server-a-prod
-```
-
-**Terminal 2 - Server B (Greeting Service):**
-```bash
-source clarvynn-demo-env/bin/activate
-clarvynn run uwsgi --ini clarvynn_examples/http_b.ini --workers 1 --threads 1 --config custom.yaml --profile server-b-prod
-```
-
-**Terminal 3 - Server C (Name Service):**
-```bash
-source clarvynn-demo-env/bin/activate
-clarvynn run python clarvynn_examples/server_c.py --config custom.yaml --profile server-c-prod
-```
-
-### Step 5: Generate Traffic
-```bash
-./generate-traffic.sh
-```
-
-### Step 6: Verify Exemplars
-```bash
-./verify-exemplars.sh
-```
-
-### Step 7: View Exemplars
-- **Grafana:** http://localhost:3000 (admin/admin) → Dashboards → "Clarvynn Application Monitoring"
-- **Prometheus:** http://localhost:9090 → Query: `http_server_duration_milliseconds_bucket` → Graph tab → Enable "Show exemplars"
-
-## Key Features
-
-### Exemplars in Action
-- **Rhombus-shaped points** on histogram charts in Grafana
-- **Click rhombus points** → Jump directly to distributed traces
-- **Zero code changes** in Flask applications
-
-### Key Metrics (with Exemplars)
-- `http_server_duration_milliseconds_bucket` - Response time histograms
-- `http_server_request_size_bytes_bucket` - Request size distributions
-- `http_server_response_size_bytes_bucket` - Response size distributions
-
-### Distributed Tracing
-- **Server A** calls **Server B** + **Server C**
-- See complete request flow in Tempo
-- Automatic trace correlation via exemplars
-
-## Demo Value
-
-### Technical Benefits
-- **Zero code changes** - Flask apps run normally
-- **Seamless instrumentation** - Clarvynn handles telemetry generation
-- **Distributed tracing** - See requests flow across services
-- **Exemplar correlation** - Direct links from metrics to traces
-
-### Business Benefits
-- **Faster troubleshooting** - From hours to minutes
-- **No development overhead** - Zero code changes needed
-- **Better user experience** - Proactive issue detection
-- **Reduced operational costs** - Efficient problem resolution
-
-## Stopping the Demo
+### Step 3: Reset Data
 
 ```bash
-# Stop Flask applications (Ctrl+C in each terminal)
+# Stop app (Ctrl+C in Terminal 1)
+
+# Reset LGTM stack for clean comparison
 ./stop-lgtm-stack.sh
+./start-lgtm-stack.sh
+
+# Dashboard will auto-load again
 ```
 
-## Documentation
+### Step 4: Enable Clarvynn
 
-- **Complete Guide:** [CLARVYNN_DEMO.md](CLARVYNN_DEMO.md)
-- **Clarvynn Website:** https://www.clarvynn.io
+```bash
+# Install (one-time)
+pip install clarvynn
+
+# Set 2 env vars:
+export CLARVYNN_ENABLED=true
+export CLARVYNN_POLICY_PATH=$(pwd)/policies/policy.yaml
+
+# Run SAME script:
+./scripts/run-app.sh
+
+# Terminal 2: Generate same traffic
+./scripts/generate-traffic.sh
+```
+
+**Check Dashboard:**
+- Monthly Cost: **~$10** (66% reduction!)
+- Traces: **~1,500** (only critical traces exported!)
+- Logs: **~5,400** (follow traces)
+- Errors: **989** (same - 0% loss!)
+
+**Screenshot this**
 
 ---
 
-**Experience zero-code observability with Clarvynn - no code changes required!**
+## What Just Happened?
+
+**Clarvynn = OTEL + 2 env vars + 1 policy file**
+
+The policy (`policies/policy.yaml`) defines what to capture:
+- All errors (4xx, 5xx)
+- All slow requests (>1s)
+- 1% of routine traffic (statistical sampling)
+
+Logs are buffered in memory and exported only when their associated span is exported. This ties log sampling to span sampling automatically.
+
+---
+
+## Understanding the Dashboard
+
+**Key Panels:**
+
+1.  **Estimated Monthly Cost**
+    - Calculates ingestion cost based on actual data volume
+    - Baseline: All requests → High cost
+    - Clarvynn: Only critical + sampled → Lower cost
+
+2.  **Trace/Log Export %**
+    - Shows what % of traffic is being traced/logged
+    - Green (low %) = efficient, Red (high %) = wasteful
+
+3.  **Total Errors**
+    - **MOST IMPORTANT:** Must be identical in both tests
+    - Proves Clarvynn captures 100% of errors despite reducing overall data
+
+4.  **Total Data Exported**
+    - Actual count of traces and logs sent to backend
+    - Should drop significantly with Clarvynn while errors stay constant
+
+**Validation:**
+- Compare the "Total Errors" number between baseline and Clarvynn runs
+- If they match → You've proven zero data loss
+- If they don't → Something's wrong (check if you reset data between tests)
+
+---
+
+## Policy File
+
+```yaml
+# policies/policy.yaml
+sampling:
+  base_rate: 0.01  # 1% of routine traffic
+
+  conditions:
+    - name: server_errors
+      when: "status_code >= 500"
+    
+    - name: client_errors
+      when: "status_code >= 400 AND status_code < 500"
+    
+    - name: slow_requests
+      when: "duration_ms > 1000"
+```
+
+---
+
+## Troubleshooting
+
+**Dashboard not loading?**
+```bash
+# Check Grafana
+open http://localhost:3000
+
+# Restart stack if needed
+./stop-lgtm-stack.sh
+./start-lgtm-stack.sh
+```
+
+**Metrics not showing?**
+```bash
+# Check if app is running
+curl http://localhost:8000/api/users
+
+# Check OTEL collector
+curl http://localhost:4318
+```
+
+---
+
+**Questions?**
+- GitHub: https://github.com/Clarvynn/Clarvynn

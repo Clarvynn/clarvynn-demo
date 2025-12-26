@@ -69,8 +69,8 @@ service:
     metrics:
       receivers: [otlp, prometheus/collector]
       processors: [resource, batch]
-      exporters: [otlphttp/metrics]
-      #exporters: [otlphttp/metrics,debug/metrics]
+      # exporters: [otlphttp/metrics]
+      exporters: [otlphttp/metrics,debug/metrics]
     logs:
       receivers: [otlp]
       processors: [resource, batch]

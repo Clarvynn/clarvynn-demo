@@ -1,693 +1,482 @@
 {
+  "title": "Clarvynn Cost Savings Demo",
+  "uid": "clarvynn-cost-demo-comprehensive",
   "annotations": {
-    "list": [
-      {
-        "builtIn": 1,
-        "datasource": {
-          "type": "grafana",
-          "uid": "-- Grafana --"
-        },
-        "enable": true,
-        "hide": true,
-        "iconColor": "rgba(0, 211, 255, 1)",
-        "name": "Annotations & Alerts",
-        "type": "dashboard"
-      }
-    ]
+    "list": []
   },
-  "description": "Clarvynn Application Monitoring - Real Flask Apps with Exemplars",
   "editable": true,
-  "fiscalYearStartMonth": 0,
-  "graphTooltip": 2,
-  "id": 1,
-  "links": [],
-  "liveNow": true,
+  "gnetId": null,
+  "graphTooltip": 0,
   "panels": [
     {
-      "datasource": {
-        "type": "datasource",
-        "uid": "grafana"
-      },
+      "id": 1,
+      "title": "Ingestion Cost (This Test)",
+      "type": "stat",
       "gridPos": {
-        "h": 3,
-        "w": 24,
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "(sum(otelcol_receiver_accepted_spans_total) * 500 / 1000000000 * 0.10) + (sum(otelcol_receiver_accepted_log_records_total) * 1200 / 1000000000 * 0.50)",
+          "refId": "A",
+          "legendFormat": "Total Cost"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 4,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "value": null,
+                "color": "green"
+              },
+              {
+                "value": 0.001,
+                "color": "yellow"
+              },
+              {
+                "value": 0.01,
+                "color": "red"
+              }
+            ]
+          }
+        }
+      },
+      "options": {
+        "graphMode": "area",
+        "orientation": "auto",
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      },
+      "description": "Ingestion cost for THIS TEST based on total traces and logs. Traces: 0.5KB @ $0.10/GB, Logs: 1.2KB @ $0.50/GB."
+    },
+    {
+      "id": 9,
+      "title": "Estimated Monthly Ingestion Cost",
+      "type": "stat",
+      "gridPos": {
+        "h": 8,
+        "w": 6,
         "x": 0,
         "y": 0
       },
-      "id": 1,
-      "options": {
-        "code": {
-          "language": "plaintext",
-          "showLineNumbers": false,
-          "showMiniMap": false
-        },
-        "content": "# Clarvynn Application Monitoring Dashboard\n\n**Real Flask Applications with Zero Code Changes** • **Distributed Tracing** • **Exemplars Connecting Metrics to Traces**\n\n**Look for RHOMBUS-SHAPED EXEMPLAR POINTS** on histogram charts below - click them to jump directly to distributed traces in Tempo!\n\n**Services**: server-a-prod-custom (Main API) • server-b-prod-custom (Greeting Service) • server-c-prod-custom (Name Service)",
-        "mode": "markdown"
-      },
-      "pluginVersion": "10.3.3",
-      "type": "text"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "description": "HTTP request rate per second by service. Shows traffic patterns across Flask applications.",
+      "targets": [
+        {
+          "expr": "((sum(otelcol_receiver_accepted_spans_total) * 500 / 1000000000 * 0.10) + (sum(otelcol_receiver_accepted_log_records_total) * 1200 / 1000000000 * 0.50)) * 2880",
+          "refId": "A",
+          "legendFormat": "Monthly Cost"
+        }
+      ],
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "Requests/sec",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "opacity",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "pointSize": 8,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
+          "unit": "currencyUSD",
+          "decimals": 2,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "value": null,
+                "color": "green"
               },
               {
-                "color": "yellow",
-                "value": 10
+                "value": 50,
+                "color": "yellow"
               },
               {
-                "color": "red",
-                "value": 50
+                "value": 100,
+                "color": "red"
               }
             ]
-          },
-          "unit": "reqps"
-        },
-        "overrides": []
+          }
+        }
       },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 3
+      "options": {
+        "graphMode": "area",
+        "orientation": "auto",
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
       },
+      "description": "Estimated MONTHLY cost if this traffic pattern continues 8 hours/day for 30 days. Multiplier: 2880x (96 five-min periods/day × 30 days)."
+    },
+    {
       "id": 2,
-      "options": {
-        "legend": {
-          "calcs": ["lastNotNull", "max", "mean"],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "editorMode": "code",
-          "expr": "sum(rate(http_server_duration_milliseconds_count[5m])) by (service_name)",
-          "legendFormat": "{{service_name}}",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "HTTP Request Rate",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "description": "HTTP error rate percentage. Monitor application health.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "Error Rate %",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 15,
-            "gradientMode": "opacity",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "pointSize": 8,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "max": 100,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 5
-              },
-              {
-                "color": "red",
-                "value": 10
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
+      "title": "Observability Data Volume",
+      "type": "timeseries",
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 3
+        "y": 0
       },
+      "targets": [
+        {
+          "expr": "sum(rate(otelcol_receiver_accepted_spans_total[5m])) * 60",
+          "refId": "A",
+          "legendFormat": "Traces/min"
+        },
+        {
+          "expr": "sum(rate(otelcol_receiver_accepted_log_records_total[5m])) * 60",
+          "refId": "B",
+          "legendFormat": "Logs/min"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "fillOpacity": 20,
+            "lineWidth": 2
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Traces/min"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "blue"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Logs/min"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "orange"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
       "id": 3,
-      "options": {
-        "legend": {
-          "calcs": ["lastNotNull", "max", "mean"],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
+      "title": "Application Traffic",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 8
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "editorMode": "code",
-          "expr": "100 * sum(rate(http_server_duration_milliseconds_count{http_status_code=~\"4..|5..\"}[5m])) by (service_name) / sum(rate(http_server_duration_milliseconds_count[5m])) by (service_name)",
-          "legendFormat": "{{service_name}}",
-          "range": true,
-          "refId": "A"
+          "expr": "sum(rate(http_server_duration_milliseconds_count[5m])) * 60",
+          "refId": "A",
+          "legendFormat": "HTTP Requests/min"
         }
       ],
-      "title": "HTTP Error Rate",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "description": "HTTP response time percentiles WITH EXEMPLARS. Click rhombus points to see traces!",
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
+          "unit": "short",
           "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "Response Time (ms)",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "opacity",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
             "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "pointSize": 8,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+            "fillOpacity": 10,
+            "lineWidth": 2
           },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 100
-              },
-              {
-                "color": "red",
-                "value": 500
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        }
       },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 11
-      },
+      "description": "Total HTTP requests per minute (should remain constant between vanilla and Clarvynn)"
+    },
+    {
       "id": 4,
-      "options": {
-        "legend": {
-          "calcs": ["lastNotNull", "max", "mean"],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
+      "title": "Trace Export %",
+      "type": "gauge",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 8
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "histogram_quantile(0.50, sum(rate(http_server_duration_milliseconds_bucket[5m])) by (service_name, le))",
-          "legendFormat": "P50 - {{service_name}}",
-          "range": true,
+          "expr": "(sum(otelcol_receiver_accepted_spans_total) / sum(http_server_duration_milliseconds_count)) * 100",
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum(rate(http_server_duration_milliseconds_bucket[5m])) by (service_name, le))",
-          "legendFormat": "P95 - {{service_name}}",
-          "range": true,
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(http_server_duration_milliseconds_bucket[5m])) by (service_name, le))",
-          "legendFormat": "P99 - {{service_name}}",
-          "range": true,
-          "refId": "C"
         }
       ],
-      "title": "Response Time Percentiles (WITH EXEMPLARS)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "description": "HTTP request size distribution WITH EXEMPLARS. Click rhombus points to see traces!",
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "Request Size (bytes)",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "opacity",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "pointSize": 8,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
+          "unit": "percent",
           "min": 0,
+          "max": 150,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "value": 0,
+                "color": "green"
               },
               {
-                "color": "yellow",
-                "value": 1000
+                "value": 30,
+                "color": "yellow"
               },
               {
-                "color": "red",
-                "value": 10000
+                "value": 70,
+                "color": "red"
               }
             ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
+          }
+        }
       },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 19
+      "options": {
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true
       },
+      "description": "Traces exported / HTTP requests. ~100% = vanilla OTEL (all traced). ~15% = Clarvynn (85% cost savings). Can exceed 100% due to OTEL internal spans."
+    },
+    {
       "id": 5,
-      "options": {
-        "legend": {
-          "calcs": ["lastNotNull", "max", "mean"],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
+      "title": "Log Export %",
+      "type": "gauge",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 8
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum(rate(http_server_request_size_bytes_bucket[5m])) by (service_name, le))",
-          "legendFormat": "P95 Request Size - {{service_name}}",
-          "range": true,
+          "expr": "(sum(otelcol_receiver_accepted_log_records_total) / (sum(http_server_duration_milliseconds_count) * 4.2)) * 100",
           "refId": "A"
         }
       ],
-      "title": "Request Size P95 (WITH EXEMPLARS)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "description": "HTTP response size distribution WITH EXEMPLARS. Click rhombus points to see traces!",
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "Response Size (bytes)",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "opacity",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "pointSize": 8,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
+          "unit": "percent",
           "min": 0,
+          "max": 150,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "value": 0,
+                "color": "green"
               },
               {
-                "color": "yellow",
-                "value": 1000
+                "value": 30,
+                "color": "yellow"
               },
               {
-                "color": "red",
-                "value": 10000
+                "value": 70,
+                "color": "red"
               }
             ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
+          }
+        }
       },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 19
+      "options": {
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true
       },
+      "description": "Logs exported / expected logs (~4.2 logs per request). ~100% = vanilla OTEL. ~15% = Clarvynn. Logs follow trace decisions via Flight Recorder."
+    },
+    {
       "id": 6,
-      "options": {
-        "legend": {
-          "calcs": ["lastNotNull", "max", "mean"],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
+      "title": "Total Errors",
+      "type": "stat",
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 16
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum(rate(http_server_response_size_bytes_bucket[5m])) by (service_name, le))",
-          "legendFormat": "P95 Response Size - {{service_name}}",
-          "range": true,
+          "expr": "sum(http_server_duration_milliseconds_count{http_status_code=~\"[45]..\"}) or vector(0)",
           "refId": "A"
         }
       ],
-      "title": "Response Size P95 (WITH EXEMPLARS)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "description": "Traffic breakdown by HTTP endpoint and method",
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "Requests/sec",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "opacity",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "pointSize": 8,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
+          "unit": "none",
+          "decimals": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "value": null,
+                "color": "green"
               }
             ]
-          },
-          "unit": "reqps"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 27
-      },
-      "id": 7,
-      "options": {
-        "legend": {
-          "calcs": ["lastNotNull", "max"],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
+          }
         }
+      },
+      "options": {
+        "graphMode": "area",
+        "orientation": "auto",
+        "textMode": "value_and_name",
+        "colorMode": "value"
+      },
+      "description": "Total 4xx and 5xx errors in this test. Compare between vanilla and Clarvynn runs - should be identical, proving 100% error capture."
+    },
+    {
+      "id": 7,
+      "title": "Request Breakdown by Status",
+      "type": "piechart",
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 16
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "editorMode": "code",
-          "expr": "sum(rate(http_server_duration_milliseconds_count[5m])) by (service_name, http_method, http_route)",
-          "legendFormat": "{{service_name}} {{http_method}} {{http_route}}",
-          "range": true,
-          "refId": "A"
+          "expr": "sum(increase(http_server_duration_milliseconds_count{http_status_code=~\"2..\"}[5m]))",
+          "refId": "A",
+          "legendFormat": "Success (2xx)"
+        },
+        {
+          "expr": "sum(increase(http_server_duration_milliseconds_count{http_status_code=~\"4..\"}[5m]))",
+          "refId": "B",
+          "legendFormat": "Client Errors (4xx)"
+        },
+        {
+          "expr": "sum(increase(http_server_duration_milliseconds_count{http_status_code=~\"5..\"}[5m]))",
+          "refId": "C",
+          "legendFormat": "Server Errors (5xx)"
         }
       ],
-      "title": "Traffic by Endpoint",
-      "type": "timeseries"
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "donut"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "title": "Total Data Exported",
+      "type": "stat",
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 16,
+        "y": 16
+      },
+      "targets": [
+        {
+          "expr": "sum(otelcol_receiver_accepted_spans_total) or vector(0)",
+          "refId": "A",
+          "legendFormat": "Traces (Total)"
+        },
+        {
+          "expr": "sum(otelcol_receiver_accepted_log_records_total) or vector(0)",
+          "refId": "B",
+          "legendFormat": "Logs (Total)"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 0
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Traces (Total)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "blue"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Logs (Total)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "orange"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "graphMode": "none",
+        "orientation": "horizontal",
+        "textMode": "value_and_name",
+        "colorMode": "background"
+      },
+      "description": "Total traces and logs exported in this test."
     }
   ],
-  "refresh": "5s",
-  "schemaVersion": 39,
-  "tags": ["clarvynn", "http", "exemplars", "flask"],
-  "templating": {
-    "list": []
-  },
   "time": {
-    "from": "now-15m",
+    "from": "now-5m",
     "to": "now"
   },
-  "timepicker": {},
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m"
+    ]
+  },
   "timezone": "",
-  "title": "Clarvynn Application Monitoring",
-  "uid": "clarvynn-app-monitoring",
+  "schemaVersion": 27,
   "version": 1,
-  "weekStart": ""
-} 
+  "refresh": "5s"
+}
