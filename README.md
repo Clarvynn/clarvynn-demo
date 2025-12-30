@@ -1,6 +1,6 @@
-# Clarvynn Cost Savings Demo
+# Clarvynn Demo
 
-**See 66-70% observability cost reduction in < 5 minutes.**
+**See how Source Governance reduces telemetry volume while preserving critical signals in < 5 minutes.**
 
 ---
 
@@ -13,7 +13,15 @@
 | **Error Count** | 989 | 989 | 0% loss |
 | **Monthly Cost** | ~$28 | ~$10 | 66% ↓ |
 
-> **Note:** This demo uses 30% error rate (conservative). Real production with <5% errors sees **90%+ savings**.
+> **Note:** This demo uses 30% error rate for visibility. Production workloads with lower error rates will see higher volume reduction.
+
+### Before: OTEL Auto-Instrumentation (Baseline)
+
+![OTEL Auto-Instrumentation](img/OTEL%20AutoInstrumentation.png)
+
+### After: With Clarvynn
+
+![OTEL Auto-Instrumentation with Clarvynn](img/OTEL%20Autoinstrumentation%20with%20Clarvynn.png)
 
 ---
 
@@ -119,7 +127,7 @@ Logs are buffered in memory and exported only when their associated span is expo
 
 2.  **Trace/Log Export %**
     - Shows what % of traffic is being traced/logged
-    - Green (low %) = efficient, Red (high %) = wasteful
+    - Green (low %) = reduced volume, Red (high %) = full export
 
 3.  **Total Errors**
     - **MOST IMPORTANT:** Must be identical in both tests
